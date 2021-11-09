@@ -1,0 +1,34 @@
+name: readline
+variant: scratch
+shell: /toolchain/bin/bash
+dependencies:
+  - stage: base
+  - stage: ncurses
+steps:
+  - sources:
+      - url: http://git.savannah.gnu.org/cgit/readline.git/snapshot/readline-8.1.tar.gz
+        destination: readline.tar.gz
+        sha256: ab9972cf45cdef5c7d5f9d773d6046013266389bb436bce8ab3b52fe02331f60
+        sha512: 168db858b639fbe47966a74d3fca32e046cefa2cf214e148fe793e2bc8fcb971b9a3837242fa350264289b2d5ceaa982e4beee9e669a571bef08b14bb64b43b4
+    prepare:
+      - |
+        tar -xzf readline.tar.gz --strip-components=1
+
+        mkdir build
+        cd build
+
+        ../configure \
+            --prefix=/usr \
+            --disable-static \
+            --with-curses
+    build:
+      - |
+        cd build
+        make -j $(nproc) SHLIB_LIBS=-lncurses
+    install:
+      - |
+        cd build
+        make install DESTDIR=/rootfs
+finalize:
+  - from: /rootfs
+    to: /

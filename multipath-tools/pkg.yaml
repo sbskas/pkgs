@@ -1,0 +1,35 @@
+name: multipath-tools
+variant: scratch
+shell: /toolchain/bin/bash
+dependencies:
+  - stage: base
+  - stage: lvm2
+  - stage: eudev
+  - stage: util-linux
+  - stage: libaio
+  - stage: libjson-c
+  - stage: liburcu
+  - stage: ncurses
+  - stage: readline
+steps:
+  - sources:
+      - url: https://github.com/opensvc/multipath-tools/archive/0.8.6.tar.gz
+        destination: multipath-tools.tar.gz
+        sha256: ba781d981bd6e8efa5f9f3af6727f85520af6395958e852c1907f59f6124f08e
+        sha512: 82e5b7307e599ba6b059679c3987a442fb5be4885f0a27c260a99a07cb336b88d48e314b4ec951944e0200e4731522d8da043d98fa566857ecc6d100791c0e38
+    env:
+      PKG_CONFIG_PATH: /usr/lib/pkgconfig
+
+    prepare:
+      - |
+        tar -xzf multipath-tools.tar.gz --strip-components=1
+        patch -p1 </pkg/patches/ncurses.patch
+    build:
+      - |
+        make -j $(nproc)
+    install:
+      - |
+        make install DESTDIR=/rootfs
+finalize:
+  - from: /rootfs
+    to: /

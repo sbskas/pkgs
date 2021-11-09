@@ -1,0 +1,12 @@
+diff -ubwr mp-orig/multipathd/Makefile multipath-tools-0.8.6/multipathd/Makefile
+--- mp-orig/multipathd/Makefile	2021-04-01 17:28:49.000000000 +0200
++++ multipath-tools-0.8.6/multipathd/Makefile	2021-11-09 21:28:47.720489451 +0100
+@@ -15,7 +15,7 @@
+ LDFLAGS += $(BIN_LDFLAGS)
+ LIBDEPS += -L$(multipathdir) -lmultipath -L$(mpathpersistdir) -lmpathpersist \
+ 	   -L$(mpathcmddir) -lmpathcmd -ludev -ldl -lurcu -lpthread \
+-	   -ldevmapper -lreadline
++	   -ldevmapper -lreadline -lncurses
+ 
+ ifdef SYSTEMD
+ 	CFLAGS += -DUSE_SYSTEMD=$(SYSTEMD)

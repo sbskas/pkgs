@@ -18,6 +18,7 @@ IGNORE_VIOLATIONS = {
     'CONFIG_IA32_EMULATION', # see https://github.com/talos-systems/pkgs/pull/125
     'CONFIG_HARDEN_BRANCH_PREDICTOR', # looks like a bug in kconfig-hardened-check, default in 5.9, but not enabled in 5.10
     'CONFIG_INIT_ON_FREE_DEFAULT_ON', # disabled init_on_free=1 due to performance
+    'CONFIG_RANDOMIZE_KSTACK_OFFSET_DEFAULT',
 }
 
 def main():

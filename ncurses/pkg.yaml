@@ -1,0 +1,38 @@
+name: ncurses
+variant: scratch
+shell: /toolchain/bin/bash
+dependencies:
+  - stage: base
+steps:
+  - sources:
+      - url: https://invisible-mirror.net/archives/ncurses/ncurses-6.3.tar.gz
+        destination: ncurses.tar.gz
+        sha256: 97fc51ac2b085d4cde31ef4d2c3122c21abc217e9090a43a30fc5ec21684e059
+        sha512: 5373f228cba6b7869210384a607a2d7faecfcbfef6dbfcd7c513f4e84fbd8bcad53ac7db2e7e84b95582248c1039dcfc7c4db205a618f7da22a166db482f0105
+    prepare:
+      - |
+        tar -xzf ncurses.tar.gz --strip-components=1
+
+        mkdir build
+        cd build
+
+        ../configure \
+            --prefix=/usr \
+            --without-cxx-binding \
+            --without-manpages \
+            --with-shared \
+            --with-versioned-syms \
+            --without-ada \
+            --without-tests \
+            --without-debug
+    build:
+      - |
+        cd build
+        make -j $(nproc)
+    install:
+      - |
+        cd build
+        make install DESTDIR=/rootfs
+finalize:
+  - from: /rootfs
+    to: /
