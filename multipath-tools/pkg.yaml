@@ -24,12 +24,18 @@ steps:
       - |
         tar -xzf multipath-tools.tar.gz --strip-components=1
         patch -p1 </pkg/patches/ncurses.patch
+        cp -r /pkg/kpartx_id .
     build:
       - |
         make -j $(nproc)
+        export GOPATH=/go
+        export PATH=${PATH}:/${TOOLCHAIN}/go/bin
+        cd kpartx_id
+        go build .
     install:
       - |
         make install DESTDIR=/rootfs
+        cp kpartx_id/kpartx_id /rootfs/usr/lib/udev/kpartx_id
 finalize:
   - from: /rootfs
     to: /
